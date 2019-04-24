@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.co.mapper.board">
+	 <select id="list" resultType="BoardVO">
+		select * from tbl_board order by bno desc
+	</select>
+	
+	<select id="getAmount" resultType="Integer"> <!-- 총페이지갯수구하기 -->
+		select count(bno) from tbl_board
+	</select>
+	
+	<select id="createBno" resultType="Integer">
+		select max(bno) from tbl_board
+	</select>
+	
+	<update id="viewCnt">
+		update tbl_board set viewCnt=viewCnt+1 where bno=#{bno}
+	</update>
+	
+	<insert id="write">
+		insert into tbl_board (bno, title, content, writer, viewcnt) values (#{bno}, #{title}, #{content}, #{writer}, 0)
+	</insert>
+	
+	<select id="read" resultType="kr.co.domain.BoardVO">
+		select * from tbl_board where bno=#{bno}
+	</select>
+	
+	<update id="update">
+		update tbl_board set title=#{title}, writer=#{writer}, content=#{content}, updateDate=sysdate where bno=#{bno} 
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_board where bno=#{bno}
+	</delete>
+	
+	<sql id="searchIf">
+		<if test="searchType!=null">
+			<if test="searchType=='writer'.toString()">
+					<!-- 대소문자 안가리고 변환. -->
+				where upper(writer) like '%'||upper(#{keyword})||'%'
+			</if>
+			<if test="searchType=='title'.toString()">
+				where lower(title) like '%'||lower(#{keyword})||'%'
+			</if>
+			<if test="searchType=='content'.toString()">
+				where lower(content) like '%'||lower(#{keyword})||'%'
+			</if>
+		</if>
+	</sql>
+	
+	<select id="search" resultType="kr.co.domain.BoardVO">
+		<!-- sql문을 끝까지 다 돌리라고 표시해줌. CDATA: 캐릭터형 데이터라는뜻=텍스트로인식해라 -->
+		<![CDATA[
+			select * from tbl_board 
+		]]>
+					<!-- refid: sql태그의 id값 -->
+					<!-- include는 텍스트로 인식하면 안되기 때문에 따로 CDATA선언 -->
+			<include refid="searchIf"></include> 
+		<![CDATA[
+			order by bno desc
+		]]>
+	</select>
+	
+	<select id="getSearchAmount" resultType="Integer">
+		select count(bno) from tbl_board
+		<include refid="searchIf"></include>
+	</select>
+</mapper>

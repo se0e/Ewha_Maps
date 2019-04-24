@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.mapper.tvp">
+	 <select id="list" resultType="kr.co.domain.TVPDTO">
+		select * from tvp order by id
+	</select>
+	
+	<select id="selectbyid" resultType="kr.co.domain.TVPDTO">
+		select * from tvp where id=#{id}
+	</select>
+	
+	<insert id="insert">
+		insert into tvp (id,pname,pb) values(#{id}, #{pname}, #{pb})
+	</insert>
+	
+	<update id="update">
+		update tvp set pname=#{pname}, pb=#{pb} where id=#{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tvp where id=#{id}
+	</delete>
+	
+</mapper>
