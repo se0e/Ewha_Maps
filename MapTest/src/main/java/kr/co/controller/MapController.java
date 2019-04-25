@@ -22,7 +22,8 @@ public class MapController {
 	
 	@RequestMapping("/map") // 전체목록출력
 	public String select(Model model) {
-		
+		// List<PlaceDTO> list = service.getPlaceList();
+		// model.addAttribute("list", list);
 		return "maps/map";
 	}
 	
